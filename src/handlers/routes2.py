@@ -14,21 +14,25 @@ from src.forms.user import Form
 
 router = Router()
 
-@router.message(Command('cancel'))
+
+@router.message(Command("cancel"))
 async def cancel(message: Message, state: FSMContext):
     await state.clear()
     await message.answer("Анкета окончена!")
 
-@router.message(Command('start'))
+
+@router.message(Command("start"))
 async def start(message: Message, state: FSMContext):
     await message.answer("Давайте начнем заполнять анкету!\nСперва введите ваше имя:")
     await state.set_state(Form.name)
+
 
 @router.message(Form.name, F.text)
 async def process_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await message.answer("Отлично!\nПродолжим, введите возраст:")
     await state.set_state(Form.age)
+
 
 @router.message(Form.age, F.text)
 async def process_age(message: Message, state: FSMContext):
@@ -41,6 +45,7 @@ async def process_age(message: Message, state: FSMContext):
         await message.answer("Отлично!\nПродолжим, введите email:")
         await state.set_state(Form.email)
 
+
 @router.message(Form.email, F.text)
 async def process_email(message: Message, state: FSMContext):
     email_text = message.text
@@ -49,8 +54,10 @@ async def process_email(message: Message, state: FSMContext):
     else:
         await state.update_data(email=email_text)
         data = await state.get_data()
-        await message.answer(f"Отлично! Мы зарегистрировали Вас!\n"
-                             f"Имя: {data['name']}. Возраст: {data['age']}. Почта: {data['email']}.")
+        await message.answer(
+            f"Отлично! Мы зарегистрировали Вас!\n"
+            f"Имя: {data['name']}. Возраст: {data['age']}. Почта: {data['email']}."
+        )
         await state.clear()
 
 
@@ -63,9 +70,9 @@ async def process_photo(message: Message):
     await message.answer_photo(
         file_id,
         caption=f"Вы отправили фото:\n"
-            f"Id photo: <code>{file_id}</code>\n"
-            f"Size photo: <code>{file_size}</code>\n",
-        parse_mode="HTML"
+        f"Id photo: <code>{file_id}</code>\n"
+        f"Size photo: <code>{file_size}</code>\n",
+        parse_mode="HTML",
     )
 
 
@@ -78,19 +85,20 @@ async def process_video(message: Message):
     await message.answer_video(
         file_id,
         caption=f"Вы отправили видео:\n"
-                f"Id video: <code>{file_id}</code>\n"
-                f"Duration video: <code>{duration}</code>\n",
-        parse_mode="HTML"
+        f"Id video: <code>{file_id}</code>\n"
+        f"Duration video: <code>{duration}</code>\n",
+        parse_mode="HTML",
     )
+
 
 @router.message(F.animation)
 async def process_video(message: Message):
     animation = message.animation
 
     await message.answer_animation(
-        animation.file_id,
-        caption=f"Вы отправили анимацию:\n"
+        animation.file_id, caption=f"Вы отправили анимацию:\n"
     )
+
 
 @router.message(F.document)
 async def process_video(message: Message, bot: Bot):
@@ -106,7 +114,7 @@ async def process_video(message: Message, bot: Bot):
     await message.answer("Файл сохранен!")
 
 
-@router.message(Command('file'))
+@router.message(Command("file"))
 async def send_file(message: Message):
-    file = FSInputFile('files/example.txt')
+    file = FSInputFile("files/example.txt")
     await message.answer_document(file)
