@@ -3,7 +3,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 
-from handlers.routes4 import router
+from handlers.routes5 import router, notifier
 
 
 load_dotenv()
@@ -15,6 +15,9 @@ dp.include_router(router)
 
 async def main():
     bot = Bot(token=TOKEN)
+
+    asyncio.create_task(notifier(bot))
+
     await dp.start_polling(bot)
 
 
