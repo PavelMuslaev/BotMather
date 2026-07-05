@@ -34,7 +34,7 @@ async def get_product(product_id: int) -> Product | None:
 def display_product(product: Product) -> str:
     return (
         f"<b>Информация по найденному товару:</b>\n"
-        f"ID: {product.get("id")}\n"
+        f"ID: {product.get('id')}\n"
         f"Название: <i>{product.get('title', 'Без названия.')}</i>\n"
         f"Цена: <i>{product.get('price', 'Не указана.')} $</i>\n"
         f"Описание: <i>{product.get('description', 'Не указано.')}</i>\n"
